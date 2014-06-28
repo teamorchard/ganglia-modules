@@ -79,3 +79,33 @@ collection_group {
   metric { name = "CPUTemp" title = "CPU Temperature" }
 }
 #+END_EXAMPLE
+
+** HDD Temperature
+
+The =hddtemp= module makes use of the program of the same name to deliver disk drive temperatures.  The configuration is two parts.  First module parameters are used to associate a device to a name:
+
+#+BEGIN_EXAMPLE
+modules {
+  module {
+    name = "hddtemp"
+    language = "python"
+
+    param SSDTemp { value = "/dev/sda" }
+    param HDDTemp { value = "/dev/sdb" }
+
+  }
+}
+#+END_EXAMPLE
+
+Second, turn on those named values as desired.
+
+#+BEGIN_EXAMPLE
+collection_group {
+  collect_every = 60
+  time_threshold = 3600
+
+  metric { name = "SSDTemp" title = "SSD temperature" }
+  metric { name = "HDDTemp" title = "HDD temperature" }
+  
+}
+#+END_EXAMPLE

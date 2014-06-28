@@ -1,0 +1,19 @@
+modules {
+  module {
+    name = "hddtemp"
+    language = "python"
+
+    param SSDTemp { value = "/dev/sda" }
+    param HDDTemp { value = "/dev/sdb" }
+
+  }
+}
+
+collection_group {
+  collect_every = 60
+  time_threshold = 3600
+
+  metric { name = "SSDTemp" title = "SSD temperature" }
+  metric { name = "HDDTemp" title = "HDD temperature" }
+  
+}
