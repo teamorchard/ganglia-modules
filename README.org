@@ -1,0 +1,81 @@
+#+TITLE: Some Ganglia Python modules
+
+* Installation
+
+This is not yet very sophisticated.
+
+1) clone the repository somewhere
+
+2) symlink the python modules files into the system area 
+
+#+BEGIN_EXAMPLE
+# cd /usr/lib/ganglia/python_modules
+# ln -s /path/to/ganglia-modules/pymodules/*.py .
+#+END_EXAMPLE
+
+3) symlink or copy the configuration files 
+
+#+BEGIN_EXAMPLE
+# cd /etc/ganglia/conf.d/
+# ln -s /path/to/ganglia-modules/conf.d/*.pyconf .
+#+END_EXAMPLE
+
+4) Edit the configuration files.   See the next section.
+
+5) Restart Ganglia
+
+#+BEGIN_EXAMPLE
+# /etc/init.d/ganglia-monitor restart
+#+END_EXAMPLE
+
+* The Modules
+
+** nVidia GPU
+
+The =nv_gpu= module makes use of =nvidia-smi= to inject values about the card's memory usage, temperature and fan.  It currently hard-codes the available quantities in the module code.  Which ones to report are turned on in the config file.  The quantities exposed are what looked interesting and implemented on a GTX 750 Ti.
+
+** LM Sensors
+
+The =lm_sens= module makes use of the =sensors= command to inject values from sensors.  This module requires explicit configuration with knowledge of what LM Sensors returns on the particular system.  To configure, run =sensors -u= to see what is available.  The output is given as a hierarchy of:
+
+- device :: the LM sensors device
+- adapter :: the adapter the device is on
+- thing :: the thing for which values are sensed
+- name :: the name of one value
+
+For example:
+
+#+BEGIN_EXAMPLE
+$ sensors -u
+coretemp-isa-0000
+Adapter: ISA adapter
+Physical id 0:
+  temp1_input: 33.000
+  temp1_max: 80.000
+  temp1_crit: 100.000
+  temp1_crit_alarm: 0.000
+#+END_EXAMPLE
+
+To configure to use a value from this one needs to set a parameter in the =module= section like:
+
+#+BEGIN_EXAMPLE
+modules {
+  module {
+    name = "lm_sens"
+    language = "python"
+
+    param CPUTemp { value = "coretemp-isa-0000:ISA adapter:Physical id 0:temp1_input" }
+  }
+}
+#+END_EXAMPLE
+
+This is needed in order to tell the =lm_sens= module how to "find" the value in the hierarchy of data from =sensors=.  This is done by associating a ":"-separated path into the hierarchy with a parameter name.  This parameter is then used to name a metric:
+
+#+BEGIN_EXAMPLE
+collection_group {
+  collect_every = 60
+  time_threshold = 3600
+
+  metric { name = "CPUTemp" title = "CPU Temperature" }
+}
+#+END_EXAMPLE

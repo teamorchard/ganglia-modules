@@ -1,0 +1,41 @@
+modules {
+  module {
+    name = "lm_sens"
+    language = "python"
+
+    # map a name to an identifier in the hiearchy of sensor data
+    param Core0Temp { value = "coretemp-isa-0000:ISA adapter:Core 0:temp2_input" }
+    param Core1Temp { value = "coretemp-isa-0000:ISA adapter:Core 1:temp3_input" }
+    param Core2Temp { value = "coretemp-isa-0000:ISA adapter:Core 2:temp4_input" }
+    param Core3Temp { value = "coretemp-isa-0000:ISA adapter:Core 3:temp5_input" }
+    param CPUTemp { value = "coretemp-isa-0000:ISA adapter:Physical id 0:temp1_input" }
+
+    param Fan1 { value = "nct6791-isa-0290:ISA adapter:fan1:fan1_input" }
+    param Fan2 { value = "nct6791-isa-0290:ISA adapter:fan2:fan2_input" }
+    param Fan3 { value = "nct6791-isa-0290:ISA adapter:fan3:fan3_input" }
+    param Fan4 { value = "nct6791-isa-0290:ISA adapter:fan4:fan4_input" }
+    param Fan5 { value = "nct6791-isa-0290:ISA adapter:fan5:fan5_input" }
+    param Fan6 { value = "nct6791-isa-0290:ISA adapter:fan6:fan6_input" }
+
+
+  }
+}
+
+collection_group {
+  collect_every = 60
+  time_threshold = 3600
+
+  # turn on various named sensor data defined above
+  metric { name = "Core0Temp" title = "Core 0 Temperature" }
+  metric { name = "Core1Temp" title = "Core 1 Temperature" }
+  metric { name = "Core2Temp" title = "Core 2 Temperature" }
+  metric { name = "Core3Temp" title = "Core 3 Temperature" }
+  metric { name = "CPUTemp" title = "CPU Temperature" }
+
+  metric { name = "Fan1" title = "Fan 1 RPMS" }
+  metric { name = "Fan2" title = "Fan 2 RPMS" }
+  metric { name = "Fan3" title = "Fan 3 RPMS" }
+  metric { name = "Fan4" title = "Fan 4 RPMS" }
+  metric { name = "Fan5" title = "Fan 5 RPMS" }
+  metric { name = "Fan6" title = "Fan 6 RPMS" }
+}

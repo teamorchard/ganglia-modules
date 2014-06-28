@@ -1,0 +1,18 @@
+modules {
+  module {
+    name = "nv_gpu"
+    language = "python"
+  }
+}
+
+collection_group {
+  collect_every = 60
+  time_threshold = 3600
+
+  metric { name = "Memory_Free" title = "GPU Memory Free" }
+  metric { name = "Memory_Used" title = "GPU Memory Used" }
+  metric { name = "Memory_Total" title = "GPU Memory Total" }
+  metric { name = "Temperature_GPU" title = "GPU Temperature" }
+  metric { name = "Fan_Speed" title = "GPU Fan Speed"}
+
+}
