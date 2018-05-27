@@ -29,10 +29,14 @@ def get_it_net():
     sock.close()
     ret = dict()
     # |dev|Maker Model|Temp|Unit||...||...|
+    #print (string)
     for ds in string.split('||'):
         parts = ds.strip('|').split('|')
         dev,model,temp,unit = parts
-        ret[dev] = int(temp)
+        if temp == "ERR":
+            pass
+        else:
+            ret[dev] = int(temp)
     return ret
 
 registered = dict()
@@ -53,7 +57,11 @@ defaults = dict(
     groups = 'thermal')
 
 def metric_init(params):
-    global registered
+    global registered, desc
+
+    if 'registered' in params:
+        registered = params['registered']
+
     desc = list()
     for name, dev in params.items():
         registered[name] = dev
@@ -63,6 +71,9 @@ def metric_init(params):
         desc.append(one)
     return desc
 
+def metric_cleanup():
+    '''Clean up the metric module.'''
+    pass
 
 
 # Local test
@@ -70,8 +81,8 @@ if '__main__' == __name__:
 
     # this would go as "param" values
     param = dict(
-        SSDTemp = '/dev/sda',
-        HDDTemp = '/dev/sdb',
+        HDD1_Temp = '/dev/sda',
+        HDD2_Temp = '/dev/sdb',
     )
     descriptors = metric_init(param)
 
